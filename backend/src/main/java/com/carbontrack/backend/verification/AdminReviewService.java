@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import com.carbontrack.backend.points.PointService;
+import com.carbontrack.backend.challenge.ChallengeService;
 
 @Service
 public class AdminReviewService {
@@ -18,13 +19,16 @@ public class AdminReviewService {
     private final ActionSubmissionRepository submissionRepository;
     private final VerificationResultRepository verificationResultRepository;
     private final PointService pointService;
+    private final ChallengeService challengeService;
 
     public AdminReviewService(ActionSubmissionRepository submissionRepository, 
                               VerificationResultRepository verificationResultRepository,
-                              PointService pointService) {
+                              PointService pointService,
+                              ChallengeService challengeService) {
         this.submissionRepository = submissionRepository;
         this.verificationResultRepository = verificationResultRepository;
         this.pointService = pointService;
+        this.challengeService = challengeService;
     }
 
     public List<SubmissionDto> getPendingReviews() {
@@ -32,6 +36,13 @@ public class AdminReviewService {
                 .map(sub -> new SubmissionDto(sub.getId(), sub.getSustainableAction().getId(), 
                         sub.getSustainableAction().getTitle(), sub.getStatus().name(), sub.getSubmittedAt(), sub.getCompletedAt()))
                 .toList();
+    }
+
+    public VerificationDetailDto getVerificationDetail(UUID submissionId) {
+        return submissionRepository.findById(submissionId)
+                .flatMap(verificationResultRepository::findBySubmission)
+                .map(VerificationDetailDto::fromEntity)
+                .orElse(null);
     }
 
     @Transactional
@@ -55,6 +66,7 @@ public class AdminReviewService {
 
         if (submission.getStatus() == SubmissionStatus.VERIFIED) {
             pointService.awardPointsForSubmission(submission);
+            challengeService.processVerifiedSubmission(submission);
         }
     }
 }

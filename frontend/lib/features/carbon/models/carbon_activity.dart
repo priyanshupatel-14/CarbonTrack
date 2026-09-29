@@ -21,14 +21,14 @@ class CarbonActivity {
 
   factory CarbonActivity.fromJson(Map<String, dynamic> json) {
     return CarbonActivity(
-      id: json['id'],
-      category: json['category'],
-      activityType: json['activityType'],
-      quantity: (json['quantity'] as num).toDouble(),
-      unit: json['unit'],
-      activityDate: json['activityDate'],
-      co2e: (json['co2e'] as num).toDouble(),
-      factorVersion: json['factorVersion'],
+      id: json['id']?.toString() ?? '',
+      category: json['category']?.toString() ?? 'TRANSPORTATION',
+      activityType: json['activityType']?.toString() ?? 'General',
+      quantity: (json['quantity'] as num?)?.toDouble() ?? 0.0,
+      unit: json['unit']?.toString() ?? 'km',
+      activityDate: json['activityDate']?.toString() ?? '',
+      co2e: (json['co2e'] as num?)?.toDouble() ?? 0.0,
+      factorVersion: (json['factorVersion'] as num?)?.toInt() ?? 1,
     );
   }
 }

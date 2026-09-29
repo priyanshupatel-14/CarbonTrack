@@ -40,7 +40,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring(7);
-        userEmail = jwtUtils.extractEmail(jwt);
+        try {
+            userEmail = jwtUtils.extractEmail(jwt);
+        } catch (Exception e) {
+            // Invalid, malformed, or expired token: proceed unauthenticated
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             com.carbontrack.backend.user.User user = this.userRepository.findByEmail(userEmail).orElse(null);

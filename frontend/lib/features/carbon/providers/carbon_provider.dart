@@ -8,16 +8,11 @@ final carbonRepositoryProvider = Provider((ref) {
   return CarbonRepository(ref.watch(dioClientProvider).dio);
 });
 
-final carbonHistoryProvider = FutureProvider<List<CarbonActivity>>((ref) async {
+final carbonHistoryProvider = FutureProvider.autoDispose<List<CarbonActivity>>((ref) async {
   return ref.watch(carbonRepositoryProvider).getHistory();
 });
 
-final carbonSummaryProvider =
-    FutureProvider.family<CarbonSummary, Map<String, String?>>((
-      ref,
-      params,
-    ) async {
-      return ref
-          .watch(carbonRepositoryProvider)
-          .getSummary(params['startDate'], params['endDate']);
-    });
+final carbonSummaryProvider = FutureProvider.autoDispose<CarbonSummary>((ref) async {
+  return ref.watch(carbonRepositoryProvider).getSummary(null, null);
+});
+

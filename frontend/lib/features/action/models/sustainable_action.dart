@@ -21,14 +21,14 @@ class SustainableAction {
 
   factory SustainableAction.fromJson(Map<String, dynamic> json) {
     return SustainableAction(
-      id: json['id'],
-      title: json['title'],
-      description: json['description'],
-      category: json['category'],
-      status: json['status'],
+      id: json['id']?.toString() ?? '',
+      title: json['title']?.toString() ?? 'Action',
+      description: json['description']?.toString() ?? '',
+      category: json['category']?.toString() ?? 'GENERAL',
+      status: json['status']?.toString() ?? 'ACTIVE',
       estimatedImpact: (json['estimatedImpact'] as num?)?.toDouble() ?? 0.0,
-      evidenceRequirements: json['evidenceRequirements'] ?? '',
-      verificationRequirements: json['verificationRequirements'] ?? '',
+      evidenceRequirements: json['evidenceRequirements']?.toString() ?? '',
+      verificationRequirements: json['verificationRequirements']?.toString() ?? '',
     );
   }
 }

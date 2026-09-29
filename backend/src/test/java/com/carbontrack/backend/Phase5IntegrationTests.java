@@ -96,6 +96,9 @@ public class Phase5IntegrationTests {
         redemptionRepository.deleteAll();
         rewardRepository.deleteAll();
         pointTransactionRepository.deleteAll();
+        jdbcTemplate.execute("DELETE FROM challenge_progress_events");
+        jdbcTemplate.execute("DELETE FROM challenge_participations");
+        jdbcTemplate.execute("DELETE FROM challenges");
         jdbcTemplate.execute("DELETE FROM verification_results");
         jdbcTemplate.execute("DELETE FROM evidence");
         submissionRepository.deleteAll();

@@ -13,4 +13,6 @@ public interface PointTransactionRepository extends JpaRepository<PointTransacti
 
     @Query("SELECT COALESCE(SUM(pt.points), 0) FROM PointTransaction pt WHERE pt.user = :user")
     int calculateBalanceByUser(@Param("user") User user);
+
+    boolean existsByTransactionTypeAndReferenceTypeAndReferenceId(TransactionType transactionType, String referenceType, String referenceId);
 }

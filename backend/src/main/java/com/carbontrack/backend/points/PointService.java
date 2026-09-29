@@ -27,6 +27,11 @@ public class PointService {
             return; // No points to award
         }
 
+        if (pointTransactionRepository.existsByTransactionTypeAndReferenceTypeAndReferenceId(
+                TransactionType.EARN, "ACTION_SUBMISSION", submission.getId().toString())) {
+            return; // Already awarded, idempotent
+        }
+
         PointTransaction tx = new PointTransaction();
         tx.setUser(submission.getUser());
         tx.setTransactionType(TransactionType.EARN);
@@ -38,8 +43,33 @@ public class PointService {
         try {
             pointTransactionRepository.saveAndFlush(tx);
         } catch (DataIntegrityViolationException e) {
-            // Already awarded points for this submission, swallow or log
-            // This prevents duplicate point awards.
+            // Already awarded points for this submission concurrently, safe
+        }
+    }
+
+    @Transactional
+    public void awardBonusPointsForChallengeCompletion(User user, java.util.UUID participationId, String challengeTitle, int bonusPoints) {
+        if (bonusPoints <= 0) {
+            return;
+        }
+
+        if (pointTransactionRepository.existsByTransactionTypeAndReferenceTypeAndReferenceId(
+                TransactionType.EARN, "CHALLENGE_COMPLETION", participationId.toString())) {
+            return; // Already awarded bonus points, idempotent
+        }
+
+        PointTransaction tx = new PointTransaction();
+        tx.setUser(user);
+        tx.setTransactionType(TransactionType.EARN);
+        tx.setPoints(bonusPoints);
+        tx.setReferenceType("CHALLENGE_COMPLETION");
+        tx.setReferenceId(participationId.toString());
+        tx.setDescription("Bonus for completing challenge: " + challengeTitle);
+
+        try {
+            pointTransactionRepository.saveAndFlush(tx);
+        } catch (DataIntegrityViolationException e) {
+            // Already awarded bonus points for this challenge completion concurrently, safe
         }
     }
 

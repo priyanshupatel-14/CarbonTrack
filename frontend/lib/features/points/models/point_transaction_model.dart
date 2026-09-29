@@ -19,13 +19,13 @@ class PointTransaction {
 
   factory PointTransaction.fromJson(Map<String, dynamic> json) {
     return PointTransaction(
-      id: json['id'] ?? '',
-      type: json['type'] ?? '',
-      points: json['points'] ?? 0,
-      referenceType: json['referenceType'] ?? '',
-      referenceId: json['referenceId'] ?? '',
-      description: json['description'] ?? '',
-      createdAt: json['createdAt'] ?? '',
+      id: json['id']?.toString() ?? '',
+      type: json['type']?.toString() ?? 'EARN',
+      points: (json['points'] as num?)?.toInt() ?? 0,
+      referenceType: json['referenceType']?.toString() ?? '',
+      referenceId: json['referenceId']?.toString() ?? '',
+      description: json['description']?.toString() ?? '',
+      createdAt: json['createdAt']?.toString() ?? '',
     );
   }
 }

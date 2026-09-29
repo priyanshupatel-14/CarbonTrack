@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DioClient {
@@ -6,9 +8,16 @@ class DioClient {
   final FlutterSecureStorage storage;
 
   DioClient(this.dio, this.storage) {
-    dio.options.baseUrl = 'http://localhost:8080/api/v1'; // Assuming local dev
-    dio.options.connectTimeout = const Duration(seconds: 5);
-    dio.options.receiveTimeout = const Duration(seconds: 3);
+    const envUrl = String.fromEnvironment('API_BASE_URL');
+    if (envUrl.isNotEmpty) {
+      dio.options.baseUrl = envUrl;
+    } else if (!kIsWeb && Platform.isAndroid) {
+      dio.options.baseUrl = 'http://10.0.2.2:8080/api/v1';
+    } else {
+      dio.options.baseUrl = 'http://localhost:8080/api/v1';
+    }
+    dio.options.connectTimeout = const Duration(seconds: 10);
+    dio.options.receiveTimeout = const Duration(seconds: 10);
 
     dio.interceptors.add(
       InterceptorsWrapper(

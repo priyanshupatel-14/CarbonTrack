@@ -28,6 +28,22 @@ public class VerificationResult {
     @Column(columnDefinition = "TEXT")
     private String aiEvidenceResult;
 
+    private String aiProvider;
+    private String aiModel;
+
+    @Column(columnDefinition = "TEXT")
+    private String aiDetectedElements;
+
+    private Boolean aiSuspicious;
+
+    private String aiFraudRisk;
+    private Boolean aiPossibleGenerated;
+    private Boolean aiPossibleManipulation;
+    private Boolean aiPossibleRecapture;
+
+    @Column(columnDefinition = "TEXT")
+    private String aiFraudIndicators;
+
     @Column(columnDefinition = "TEXT")
     private String locationResult;
 
@@ -59,6 +75,24 @@ public class VerificationResult {
     public void setConfidence(BigDecimal confidence) { this.confidence = confidence; }
     public String getAiEvidenceResult() { return aiEvidenceResult; }
     public void setAiEvidenceResult(String aiEvidenceResult) { this.aiEvidenceResult = aiEvidenceResult; }
+    public String getAiProvider() { return aiProvider; }
+    public void setAiProvider(String aiProvider) { this.aiProvider = aiProvider; }
+    public String getAiModel() { return aiModel; }
+    public void setAiModel(String aiModel) { this.aiModel = aiModel; }
+    public String getAiDetectedElements() { return aiDetectedElements; }
+    public void setAiDetectedElements(String aiDetectedElements) { this.aiDetectedElements = aiDetectedElements; }
+    public Boolean getAiSuspicious() { return aiSuspicious; }
+    public void setAiSuspicious(Boolean aiSuspicious) { this.aiSuspicious = aiSuspicious; }
+    public String getAiFraudRisk() { return aiFraudRisk; }
+    public void setAiFraudRisk(String aiFraudRisk) { this.aiFraudRisk = aiFraudRisk; }
+    public Boolean getAiPossibleGenerated() { return aiPossibleGenerated; }
+    public void setAiPossibleGenerated(Boolean aiPossibleGenerated) { this.aiPossibleGenerated = aiPossibleGenerated; }
+    public Boolean getAiPossibleManipulation() { return aiPossibleManipulation; }
+    public void setAiPossibleManipulation(Boolean aiPossibleManipulation) { this.aiPossibleManipulation = aiPossibleManipulation; }
+    public Boolean getAiPossibleRecapture() { return aiPossibleRecapture; }
+    public void setAiPossibleRecapture(Boolean aiPossibleRecapture) { this.aiPossibleRecapture = aiPossibleRecapture; }
+    public String getAiFraudIndicators() { return aiFraudIndicators; }
+    public void setAiFraudIndicators(String aiFraudIndicators) { this.aiFraudIndicators = aiFraudIndicators; }
     public String getLocationResult() { return locationResult; }
     public void setLocationResult(String locationResult) { this.locationResult = locationResult; }
     public String getTimestampResult() { return timestampResult; }

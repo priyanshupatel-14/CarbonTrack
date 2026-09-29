@@ -34,4 +34,25 @@ class RewardRepository {
     final response = await _dio.post('/merchant/coupons/consume', data: {'code': code});
     return Coupon.fromJson(response.data);
   }
+
+  // Admin specific
+  Future<Reward> createReward({
+    required String name,
+    required String description,
+    required int pointsRequired,
+    required int inventory,
+    required String merchantUserId,
+    String? expiresAt,
+  }) async {
+    final response = await _dio.post('/admin/rewards', data: {
+      'name': name,
+      'description': description,
+      'pointsRequired': pointsRequired,
+      'inventory': inventory,
+      'merchantUserId': merchantUserId,
+      'expiresAt': ?expiresAt,
+    });
+    return Reward.fromJson(response.data);
+  }
 }
+

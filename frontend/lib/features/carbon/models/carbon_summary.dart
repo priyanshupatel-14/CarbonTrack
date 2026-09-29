@@ -17,12 +17,12 @@ class CarbonSummary {
 
   factory CarbonSummary.fromJson(Map<String, dynamic> json) {
     return CarbonSummary(
-      totalCo2e: (json['totalCo2e'] as num).toDouble(),
-      transportationCo2e: (json['transportationCo2e'] as num).toDouble(),
-      electricityCo2e: (json['electricityCo2e'] as num).toDouble(),
-      foodCo2e: (json['foodCo2e'] as num).toDouble(),
-      wasteCo2e: (json['wasteCo2e'] as num).toDouble(),
-      reportingPeriod: json['reportingPeriod'],
+      totalCo2e: (json['totalCo2e'] as num?)?.toDouble() ?? 0.0,
+      transportationCo2e: (json['transportationCo2e'] as num?)?.toDouble() ?? 0.0,
+      electricityCo2e: (json['electricityCo2e'] as num?)?.toDouble() ?? 0.0,
+      foodCo2e: (json['foodCo2e'] as num?)?.toDouble() ?? 0.0,
+      wasteCo2e: (json['wasteCo2e'] as num?)?.toDouble() ?? 0.0,
+      reportingPeriod: json['reportingPeriod']?.toString() ?? 'Current Period',
     );
   }
 }

@@ -24,6 +24,15 @@ public class AdminVerificationController {
         return ResponseEntity.ok(adminReviewService.getPendingReviews());
     }
 
+    @GetMapping("/{id}/verification")
+    public ResponseEntity<VerificationDetailDto> getVerificationDetail(@PathVariable UUID id) {
+        VerificationDetailDto detail = adminReviewService.getVerificationDetail(id);
+        if (detail == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(detail);
+    }
+
     @PostMapping("/{id}/approve")
     public ResponseEntity<Void> approveSubmission(
             @PathVariable UUID id,

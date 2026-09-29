@@ -12,17 +12,17 @@ class User {
     required this.firstName,
     required this.lastName,
     required this.role,
-    required this.greenPointsBalance,
+    this.greenPointsBalance = 0,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'],
-      email: json['email'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
-      role: json['role'],
-      greenPointsBalance: json['greenPointsBalance'],
+      id: json['id']?.toString() ?? '',
+      email: json['email']?.toString() ?? '',
+      firstName: json['firstName']?.toString() ?? '',
+      lastName: json['lastName']?.toString() ?? '',
+      role: json['role']?.toString() ?? 'STUDENT',
+      greenPointsBalance: (json['greenPointsBalance'] as num?)?.toInt() ?? 0,
     );
   }
 }
@@ -35,8 +35,8 @@ class AuthResponse {
 
   factory AuthResponse.fromJson(Map<String, dynamic> json) {
     return AuthResponse(
-      token: json['token'],
-      user: User.fromJson(json['user']),
+      token: json['token']?.toString() ?? '',
+      user: User.fromJson(json['user'] ?? json),
     );
   }
 }

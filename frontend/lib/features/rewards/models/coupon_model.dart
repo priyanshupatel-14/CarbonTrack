@@ -19,12 +19,21 @@ class Coupon {
 
   factory Coupon.fromJson(Map<String, dynamic> json) {
     return Coupon(
-      id: json['id'],
-      code: json['code'],
-      status: json['status'],
-      expiresAt: json['expiresAt'],
-      redeemedAt: json['redeemedAt'],
-      reward: Reward.fromJson(json['reward']),
+      id: json['id']?.toString() ?? '',
+      code: json['code']?.toString() ?? '',
+      status: json['status']?.toString() ?? 'PENDING',
+      expiresAt: json['expiresAt']?.toString(),
+      redeemedAt: json['redeemedAt']?.toString(),
+      reward: json['reward'] is Map<String, dynamic>
+          ? Reward.fromJson(json['reward'] as Map<String, dynamic>)
+          : Reward(
+              id: '',
+              name: 'Campus Reward',
+              description: '',
+              pointsRequired: 0,
+              inventory: 0,
+              merchantName: 'Campus Merchant',
+            ),
     );
   }
 }

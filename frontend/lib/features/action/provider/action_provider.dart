@@ -5,16 +5,22 @@ import '../models/action_submission.dart';
 import '../repository/action_repository.dart';
 
 final actionRepositoryProvider = Provider<ActionRepository>((ref) {
-  final dio = ref.watch(dioProvider);
+  final dio = ref.watch(dioClientProvider).dio;
   return ActionRepository(dio);
 });
 
-final availableActionsProvider = FutureProvider<List<SustainableAction>>((ref) async {
+final availableActionsProvider = FutureProvider.autoDispose<List<SustainableAction>>((ref) async {
   final repository = ref.watch(actionRepositoryProvider);
   return repository.getActions();
 });
 
-final userSubmissionsProvider = FutureProvider<List<ActionSubmission>>((ref) async {
+final userSubmissionsProvider = FutureProvider.autoDispose<List<ActionSubmission>>((ref) async {
   final repository = ref.watch(actionRepositoryProvider);
   return repository.getSubmissions();
 });
+
+final pendingReviewsProvider = FutureProvider.autoDispose<List<ActionSubmission>>((ref) async {
+  final repository = ref.watch(actionRepositoryProvider);
+  return repository.getPendingReviews();
+});
+

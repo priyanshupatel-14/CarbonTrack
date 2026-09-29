@@ -3,7 +3,7 @@ class ActionSubmission {
   final String sustainableActionId;
   final String actionTitle;
   final String status;
-  final String submittedAt;
+  final String? submittedAt;
   final String? completedAt;
 
   ActionSubmission({
@@ -11,18 +11,18 @@ class ActionSubmission {
     required this.sustainableActionId,
     required this.actionTitle,
     required this.status,
-    required this.submittedAt,
+    this.submittedAt,
     this.completedAt,
   });
 
   factory ActionSubmission.fromJson(Map<String, dynamic> json) {
     return ActionSubmission(
-      id: json['id'],
-      sustainableActionId: json['sustainableActionId'],
-      actionTitle: json['actionTitle'],
-      status: json['status'],
-      submittedAt: json['submittedAt'],
-      completedAt: json['completedAt'],
+      id: json['id']?.toString() ?? '',
+      sustainableActionId: json['sustainableActionId']?.toString() ?? '',
+      actionTitle: json['actionTitle']?.toString() ?? 'Sustainable Action',
+      status: json['status']?.toString() ?? 'PENDING',
+      submittedAt: json['submittedAt']?.toString(),
+      completedAt: json['completedAt']?.toString(),
     );
   }
 }

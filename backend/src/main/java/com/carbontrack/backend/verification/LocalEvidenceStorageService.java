@@ -19,6 +19,9 @@ public class LocalEvidenceStorageService implements EvidenceStorageService {
 
     @Override
     public String storeEvidence(MultipartFile file) throws IOException {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("Cannot store empty or null file.");
+        }
         String originalName = file.getOriginalFilename();
         String extension = ".bin";
         if (originalName != null && originalName.lastIndexOf('.') != -1) {
@@ -39,7 +42,17 @@ public class LocalEvidenceStorageService implements EvidenceStorageService {
 
     @Override
     public void deleteEvidence(String storageKey) throws IOException {
-        Path file = Path.of(storageKey);
+        if (storageKey == null || storageKey.isBlank()) {
+            return;
+        }
+        Path file = Path.of(storageKey).normalize();
+        if (!file.startsWith(storageLocation.normalize())) {
+            throw new SecurityException("Cannot delete file outside configured directory.");
+        }
         Files.deleteIfExists(file);
+    }
+
+    public Path getStorageLocation() {
+        return storageLocation;
     }
 }

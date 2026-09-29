@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import com.carbontrack.backend.points.PointService;
+import com.carbontrack.backend.challenge.ChallengeService;
 
 @Service
 public class ActionService {
@@ -27,6 +28,7 @@ public class ActionService {
     private final VerificationService verificationService;
     private final UserRepository userRepository;
     private final PointService pointService;
+    private final ChallengeService challengeService;
 
     public ActionService(SustainableActionRepository actionRepository, 
                          ActionSubmissionRepository submissionRepository, 
@@ -34,7 +36,8 @@ public class ActionService {
                          EvidenceStorageService evidenceStorageService,
                          VerificationService verificationService,
                          UserRepository userRepository,
-                         PointService pointService) {
+                         PointService pointService,
+                         ChallengeService challengeService) {
         this.actionRepository = actionRepository;
         this.submissionRepository = submissionRepository;
         this.evidenceRepository = evidenceRepository;
@@ -42,6 +45,7 @@ public class ActionService {
         this.verificationService = verificationService;
         this.userRepository = userRepository;
         this.pointService = pointService;
+        this.challengeService = challengeService;
     }
 
     public List<ActionDto> getActiveActions() {
@@ -83,6 +87,10 @@ public class ActionService {
             throw new SecurityException("Unauthorized access to submission");
         }
 
+        if (submission.getStatus() != SubmissionStatus.PENDING) {
+            throw new IllegalStateException("Cannot add evidence to an already finalized or reviewed submission.");
+        }
+
         Evidence evidence = new Evidence();
         evidence.setSubmission(submission);
         evidence.setClientTimestamp(clientTimestamp != null ? clientTimestamp : LocalDateTime.now());
@@ -106,7 +114,16 @@ public class ActionService {
                 sb.append(String.format("%02x", b));
             }
             evidence.setSha256Hash(sb.toString());
-        } else if (latitude != null && longitude != null) {
+        } else if (latitude != null || longitude != null) {
+            if (latitude == null || longitude == null) {
+                throw new IllegalArgumentException("Both latitude and longitude must be provided for location evidence.");
+            }
+            if (latitude.compareTo(BigDecimal.valueOf(-90)) < 0 || latitude.compareTo(BigDecimal.valueOf(90)) > 0) {
+                throw new IllegalArgumentException("Invalid latitude. Latitude must be between -90 and 90.");
+            }
+            if (longitude.compareTo(BigDecimal.valueOf(-180)) < 0 || longitude.compareTo(BigDecimal.valueOf(180)) > 0) {
+                throw new IllegalArgumentException("Invalid longitude. Longitude must be between -180 and 180.");
+            }
             evidence.setType(EvidenceType.LOCATION);
             evidence.setLatitude(latitude);
             evidence.setLongitude(longitude);
@@ -154,6 +171,7 @@ public class ActionService {
 
         if (submission.getStatus() == SubmissionStatus.VERIFIED) {
             pointService.awardPointsForSubmission(submission);
+            challengeService.processVerifiedSubmission(submission);
         }
 
         return mapToDto(submission);

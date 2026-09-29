@@ -38,7 +38,7 @@ public class ActionController {
         return ResponseEntity.ok(actionService.createSubmission(principal, request));
     }
 
-    @GetMapping("/submissions")
+    @GetMapping({"/submissions", "/submissions/my"})
     public ResponseEntity<List<SubmissionDto>> getSubmissions(@AuthenticationPrincipal AuthenticatedUserPrincipal principal) {
         return ResponseEntity.ok(actionService.getUserSubmissions(principal));
     }

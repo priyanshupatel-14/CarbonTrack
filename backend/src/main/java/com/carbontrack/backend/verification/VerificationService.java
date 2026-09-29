@@ -71,9 +71,25 @@ public class VerificationService {
                 EvidenceAnalyzer.AnalysisResult aiResult = evidenceAnalyzer.analyze(evidence, submission.getSustainableAction());
                 result.setAiEvidenceResult(aiResult.explanation());
                 result.setConfidence(BigDecimal.valueOf(aiResult.confidence()));
+                result.setAiProvider(aiResult.provider());
+                result.setAiModel(aiResult.model());
+                if (aiResult.detectedElements() != null && !aiResult.detectedElements().isEmpty()) {
+                    result.setAiDetectedElements(String.join(", ", aiResult.detectedElements()));
+                } else if (aiResult.detectedContent() != null) {
+                    result.setAiDetectedElements(aiResult.detectedContent());
+                }
+                result.setAiSuspicious(aiResult.isSuspicious());
+                result.setAiFraudRisk(aiResult.fraudRisk());
+                result.setAiPossibleGenerated(aiResult.possibleAiGenerated());
+                result.setAiPossibleManipulation(aiResult.possibleManipulation());
+                result.setAiPossibleRecapture(aiResult.possibleRecapture());
+                if (aiResult.fraudIndicators() != null && !aiResult.fraudIndicators().isEmpty()) {
+                    result.setAiFraudIndicators(String.join(", ", aiResult.fraudIndicators()));
+                }
+
                 if (!aiResult.isValid()) {
                     aiPassed = false;
-                    reasons.append("AI rejected photo: ").append(aiResult.explanation()).append(" ");
+                    reasons.append("AI flagged photo: ").append(aiResult.explanation()).append(" ");
                 }
             } else if (evidence.getType() == EvidenceType.LOCATION) {
                 // Geofence check if action requires campus zone
