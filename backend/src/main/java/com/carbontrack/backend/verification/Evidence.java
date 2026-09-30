@@ -25,7 +25,7 @@ public class Evidence {
     private String storageKey;
     private String mimeType;
     private Long fileSize;
-    @Column(unique = true)
+    @Column(nullable = true)
     private String sha256Hash;
 
     // For LOCATION

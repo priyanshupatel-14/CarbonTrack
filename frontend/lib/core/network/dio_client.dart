@@ -16,8 +16,9 @@ class DioClient {
     } else {
       dio.options.baseUrl = 'http://localhost:8080/api/v1';
     }
-    dio.options.connectTimeout = const Duration(seconds: 10);
-    dio.options.receiveTimeout = const Duration(seconds: 10);
+    dio.options.connectTimeout = const Duration(seconds: 35);
+    dio.options.receiveTimeout = const Duration(seconds: 35);
+    dio.options.sendTimeout = const Duration(seconds: 35);
 
     dio.interceptors.add(
       InterceptorsWrapper(
