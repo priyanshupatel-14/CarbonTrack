@@ -114,6 +114,9 @@ public class ActionService {
                 sb.append(String.format("%02x", b));
             }
             evidence.setSha256Hash(sb.toString());
+            if (!evidenceRepository.findBySha256Hash(sb.toString()).isEmpty()) {
+                throw new IllegalArgumentException("Duplicate evidence detected.");
+            }
         } else if (latitude != null || longitude != null) {
             if (latitude == null || longitude == null) {
                 throw new IllegalArgumentException("Both latitude and longitude must be provided for location evidence.");
